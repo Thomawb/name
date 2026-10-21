@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Booster Positive</title>
+  <meta name="description" content="Ouvre un booster de l'agence Positive et découvre ses cartes." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="stage" id="stage">
+    <!-- Les cartes (sous le pack au départ) -->
+    <div class="deck" id="deck" aria-live="polite"></div>
+
+    <!-- Le booster -->
+    <div class="pack-wrap" id="packWrap">
+      <button class="pack" id="pack" type="button" aria-label="Maintenir appuyé pour ouvrir le booster">
+        <!-- Le visuel du pack est cloné en deux morceaux (haut déchirable + corps) par app.js -->
+        <template id="packArt">
+          <div class="pack-art">
+            <div class="pack-crimp pack-crimp--top"></div>
+            <div class="pack-pattern"></div>
+            <div class="pack-content">
+              <div class="pack-logo"><span class="logo-plus">+</span>positive</div>
+              <div class="pack-title">Booster</div>
+              <div class="pack-sub">Édition 2026 · 3 cartes</div>
+              <div class="pack-badge">+</div>
+            </div>
+            <div class="pack-foil"></div>
+            <div class="pack-crimp pack-crimp--bottom"></div>
+          </div>
+        </template>
+        <div class="pack-piece pack-body" id="packBody"></div>
+        <div class="pack-piece pack-top" id="packTop"></div>
+        <svg class="tear-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <polyline id="tearLine" pathLength="1" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Indications -->
+    <div class="hud" id="hud">
+      <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+      <p class="hint" id="hint">Maintiens le booster appuyé pour l'ouvrir</p>
+    </div>
+
+    <!-- Récapitulatif -->
+    <section class="summary" id="summary" hidden>
+      <h1 class="summary-title">Ta collection</h1>
+      <div class="summary-grid" id="summaryGrid"></div>
+      <button class="btn" id="again" type="button">Ouvrir un nouveau booster</button>
+    </section>
+  </main>
+
+  <div class="flash" id="flash"></div>
+  <div class="fx" id="fx" aria-hidden="true"></div>
+
+  <script src="cards.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
