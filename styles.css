@@ -8,10 +8,23 @@
   font-display: swap;
 }
 
+/* Century Gothic installée sur le poste : on la cherche sous ses différents noms
+   (Windows, macOS/Office) pour être sûr de l'utiliser, regular et gras. */
+@font-face {
+  font-family: "Century Gothic Positive";
+  src: local("Century Gothic"), local("CenturyGothic"), local("Century Gothic Regular");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Century Gothic Positive";
+  src: local("Century Gothic Bold"), local("CenturyGothic-Bold"), local("Century Gothic Gras");
+  font-weight: 700;
+}
+
 :root {
   --page: #ffffff;       /* fond du site */
   --paper: #ffffff;      /* cadre et dos des cartes */
-  --ink: #232322;        /* textes (noir pour le contraste) */
+  --ink: #3c3c3b;        /* noir de la charte (textes) */
   --media: #f5f3f1;      /* fond des visuels provisoires */
   --shadow: rgba(40, 30, 25, 0.16);
 
@@ -22,7 +35,7 @@
   --r-legendaire: #ffda8e; /* jaune (alternative plus vive : #fff264) */
 
   --font-title: "Bohemian Soul", Georgia, serif;
-  --font-body: "Century Gothic", CenturyGothic, "Didact Gothic", AppleGothic, sans-serif;
+  --font-body: "Century Gothic Positive", "Century Gothic", CenturyGothic, "Didact Gothic", AppleGothic, sans-serif;
 
   --trame: url("assets/trame.svg");
   --logo: url("assets/logo-agence-positive.svg");
@@ -38,6 +51,9 @@
 }
 
 * { box-sizing: border-box; }
+
+/* les boutons n'héritent pas de la police par défaut */
+button { font: inherit; color: inherit; }
 
 html, body {
   margin: 0;
@@ -153,7 +169,7 @@ body {
   font-weight: 400;
   font-size: 27cqw;
   line-height: 0.9;
-  color: var(--ink);
+  color: var(--paper);
 }
 
 .pack-sub {
@@ -164,6 +180,8 @@ body {
   padding: 2cqw 4cqw;
   border: 0.5cqw solid currentColor;
   border-radius: 99px;
+  color: var(--paper);
+  opacity: 0.8;
 }
 
 /* reflet métallisé */
@@ -186,7 +204,7 @@ body {
   left: 0;
   right: 0;
   top: var(--tear-y, 15%);
-  border-top: 2px dashed color-mix(in srgb, var(--ink) 30%, transparent);
+  border-top: 2px dashed color-mix(in srgb, var(--paper) 55%, transparent);
   z-index: 3;
   pointer-events: none;
   transition: opacity 0.3s;
@@ -196,7 +214,7 @@ body {
   left: 0;
   right: 0;
   top: -2px;
-  border-top: 2px dashed var(--ink);
+  border-top: 2px dashed var(--paper);
   clip-path: inset(-4px calc((1 - var(--tear-p, 0)) * 100%) -4px 0);
 }
 
@@ -235,7 +253,7 @@ body {
   height: 100%;
   width: 0;
   border-radius: inherit;
-  background: var(--ink);
+  background: var(--r-commun);
 }
 .hud.is-deck .progress { display: none; }
 
@@ -294,11 +312,10 @@ body {
 
 /* ---------- dos de carte ---------- */
 .card-back {
-  background: var(--paper);
+  background: var(--rc);
   display: grid;
   place-items: center;
-  --trame-color: var(--r-commun);
-  --trame-opacity: 0.9;
+  --trame-opacity: 0.6;
 }
 .card-back-logo {
   position: relative;
@@ -318,7 +335,7 @@ body {
 /* ---------- face avant ---------- */
 .card-front {
   transform: rotateY(180deg);
-  background: var(--paper);
+  background: var(--rc);
   padding: 2.6cqw;
 }
 
@@ -535,14 +552,6 @@ body {
 /* =================================================================
    EFFETS
    ================================================================= */
-.flash {
-  position: fixed;
-  inset: 0;
-  background: var(--r-commun);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 20;
-}
 .fx {
   position: fixed;
   inset: 0;

@@ -19,7 +19,6 @@
   const progressBar = $("progressBar");
   const summary = $("summary");
   const summaryGrid = $("summaryGrid");
-  const flash = $("flash");
   const fx = $("fx");
 
   const css = getComputedStyle(document.documentElement);
@@ -115,7 +114,6 @@
     hint.textContent = "";
     pack.style.transform = "scale(1.08)";
     if (navigator.vibrate) navigator.vibrate([30, 40, 60]);
-    flashScreen(0.5, brand("--r-commun"));
 
     buildDeck();
 
@@ -320,7 +318,6 @@
     const colorVar = { rare: "--r-rare", epique: "--r-epique", legendaire: "--r-legendaire" }[data.rarity];
     const colors = [brand(colorVar), brand("--r-commun"), brand("--ink")];
     setTimeout(() => {
-      if (level >= 3) flashScreen(0.6, brand(colorVar));
       if (level >= 2 && navigator.vibrate) navigator.vibrate(level >= 3 ? [40, 30, 80] : 40);
       burst(el.getBoundingClientRect(), colors, [0, 16, 36, 70][level]);
     }, reducedMotion ? 0 : 280);
@@ -350,13 +347,6 @@
       ).finished.then(() => p.remove());
     }
   }
-
-  function flashScreen(strength, color) {
-    if (reducedMotion) return;
-    flash.style.background = color;
-    flash.animate([{ opacity: strength }, { opacity: 0 }], { duration: 600, easing: "ease-out" });
-  }
-
 
   /* ------------------------------------------------------------------
      Récap + nouveau booster
