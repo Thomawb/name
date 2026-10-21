@@ -13,6 +13,7 @@
   const packTop = $("packTop");
   const packBody = $("packBody");
   const tearLine = $("tearLine");
+  const tearSvg = tearLine.ownerSVGElement;
   const deck = $("deck");
   const hud = $("hud");
   const hint = $("hint");
@@ -103,7 +104,7 @@
     const r = (Math.random() * 2 - 1) * (holding && !reducedMotion ? 0.3 + e * 3.5 : 0);
     const s = 1 + 0.08 * (1 - (1 - p) * (1 - p));
     pack.style.transform = `translate(${x}px, ${y}px) rotate(${r}deg) scale(${s})`;
-    tearLine.style.strokeDashoffset = String(1 - p);
+    tearSvg.style.clipPath = `inset(-10% ${(1 - p) * 100}% -10% 0)`;
     progressBar.style.width = `${p * 100}%`;
     if (holding && navigator.vibrate && Math.random() < e * 0.15) navigator.vibrate(8);
   }
@@ -130,7 +131,7 @@
       ],
       { duration: reducedMotion ? 400 : 1200, easing: "cubic-bezier(.45,0,.8,.4)", fill: "forwards" }
     );
-    tearLine.style.opacity = "0";
+    tearSvg.style.opacity = "0";
 
     await wait(reducedMotion ? 150 : 380);
 
@@ -248,7 +249,7 @@
     const initials = c.title.replace(/[^A-Za-zÀ-ÿ ]/g, "").split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
     const gid = `g-${c.id}`;
     return `
-      <svg viewBox="0 0 160 100" role="img" aria-label="${esc(c.imageAlt || c.title)}">
+      <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(c.imageAlt || c.title)}">
         <defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stop-color="${p}"/><stop offset="1" stop-color="${s}"/></linearGradient></defs>
         <rect width="160" height="100" fill="url(#${gid})"/>
@@ -402,7 +403,7 @@
     packWrap.getAnimations().forEach((a) => a.cancel());
     packWrap.hidden = false;
     pack.style.transform = "";
-    tearLine.style.opacity = "";
+    tearSvg.style.opacity = "";
     progress = 0;
     renderCharge(0);
     buildPack();

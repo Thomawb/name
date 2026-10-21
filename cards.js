@@ -18,14 +18,14 @@ window.BOOSTER_CARDS = [
     imageAlt: "L'agence Positive",
     energy: 100,
     description:
-      "Une agence de communication qui met du sens et de l'énergie positive au service des marques.", // TODO
+      "Agence de communication responsable pour les entreprises, collectivités et associations du Val de Saône, de la Dombes et du Beaujolais.",
     ability: {
-      name: "Effet Positif",
-      text: "Quand cette carte entre en jeu, toutes vos marques gagnent +2 en clarté et en caractère.",
+      name: "Communiquons mieux",
+      text: "Stratégie, identité, print et digital, avec un impact environnemental et sociétal limité.",
     },
     facts: [
-      { label: "Expertise", value: "Identité visuelle & communication" }, // TODO
-      { label: "Site", value: "agence-positive.fr" },
+      { label: "Basée à", value: "Savigneux" },
+      { label: "Site web", value: "0,16 g de CO₂ par vue" },
     ],
     link: { label: "Découvrir l'agence", url: "https://agence-positive.fr/" },
   },

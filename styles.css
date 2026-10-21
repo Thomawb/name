@@ -4,12 +4,16 @@
    TODO : remplacer par les valeurs exactes de la charte agence-positive.fr
    ================================================================= */
 :root {
-  --brand-primary: #ff5a3c;   /* couleur principale */
-  --brand-secondary: #ffc93c; /* couleur d'accent */
-  --brand-tertiary: #7b61ff;  /* couleur complémentaire */
-  --brand-dark: #16131f;      /* fond / textes foncés */
-  --brand-light: #fff8f0;     /* fond clair des cartes */
+  /* Corail : couleur de marque relevée sur agence-positive.fr ;
+     noir et blanc : déclinaisons du logo. */
+  --brand-primary: #f18867;   /* corail Positive */
+  --brand-secondary: #fbc8b4; /* corail clair */
+  --brand-tertiary: #c95a3c;  /* corail profond */
+  --brand-dark: #1d1d1b;      /* noir logo */
+  --brand-light: #ffffff;     /* blanc logo */
+  color-scheme: dark;
 
+  /* TODO : polices exactes du site (non incluses dans la page HTML fournie) */
   --font-title: "Syne", system-ui, sans-serif;
   --font-body: "DM Sans", system-ui, sans-serif;
 
@@ -49,8 +53,7 @@ body {
 
 .stage {
   position: relative;
-  height: 100vh;
-  height: 100dvh;
+  height: 100%;
   display: grid;
   place-items: center;
 }
@@ -158,7 +161,7 @@ body {
 .pack-title {
   font-family: var(--font-title);
   font-weight: 800;
-  font-size: 15cqw;
+  font-size: 13.5cqw;
   line-height: 0.9;
   text-transform: uppercase;
   color: var(--brand-light);
@@ -213,14 +216,13 @@ body {
   z-index: 3;
   pointer-events: none;
   overflow: visible;
+  clip-path: inset(-10% 100% -10% 0);
 }
 .tear-line polyline {
   fill: none;
   stroke: var(--brand-light);
   stroke-width: 2.5;
   vector-effect: non-scaling-stroke;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
   filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9));
 }
 
@@ -393,8 +395,9 @@ body {
   margin: 0;
   font-family: var(--font-title);
   font-weight: 800;
-  font-size: 8.4cqw;
+  font-size: 7.6cqw;
   line-height: 1;
+  text-wrap: balance;
   letter-spacing: -0.02em;
 }
 .front-energy {
@@ -423,14 +426,16 @@ body {
 
 .front-img {
   position: relative;
-  aspect-ratio: 16 / 10;
+  flex: 1 1 0;
+  min-height: 24cqw;
   border-radius: 2cqw;
   overflow: hidden;
   border: 1.2cqw solid var(--rc);
   background: var(--brand-dark);
-  flex: none;
 }
 .front-img img, .front-img svg {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -482,7 +487,6 @@ body {
   display: grid;
   gap: 0.8cqw;
   font-size: 3.1cqw;
-  margin-top: auto;
 }
 .front-facts div {
   display: flex;
