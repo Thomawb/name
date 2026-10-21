@@ -12,8 +12,7 @@
   const packWrap = $("packWrap");
   const packTop = $("packTop");
   const packBody = $("packBody");
-  const tearLine = $("tearLine");
-  const tearSvg = tearLine.ownerSVGElement;
+  const tearGuide = $("tearGuide");
   const deck = $("deck");
   const hud = $("hud");
   const hint = $("hint");
@@ -30,6 +29,7 @@
   let progress = 0;
   let holding = false;
   let lastTime = 0;
+  let phase = 0;
   let raf = 0;
   let cards = [];
 
@@ -42,19 +42,10 @@
     packTop.replaceChildren(tpl.content.cloneNode(true));
     packBody.replaceChildren(tpl.content.cloneNode(true));
 
-    const pts = [];
-    const steps = 18;
-    for (let i = 0; i <= steps; i++) {
-      const x = (i / steps) * 100;
-      const y = TEAR_Y + (i % 2 ? 1.4 : -1.4) + (Math.random() * 1.6 - 0.8);
-      pts.push([x, y]);
-    }
-    const line = pts.map(([x, y]) => `${x}% ${y}%`);
-    packTop.style.clipPath = `polygon(0 0, 100% 0, ${[...line].reverse().join(", ")})`;
-    // léger chevauchement pour qu'aucune couture ne soit visible avant la déchirure
-    const overlap = pts.map(([x, y]) => `${x}% ${y - 0.6}%`);
-    packBody.style.clipPath = `polygon(${overlap.join(", ")}, 100% 100%, 0 100%)`;
-    tearLine.setAttribute("points", pts.map(([x, y]) => `${x},${y}`).join(" "));
+    // découpe droite ; léger chevauchement pour qu'aucune couture ne soit visible avant la déchirure
+    packTop.style.clipPath = `inset(0 0 ${100 - TEAR_Y}% 0)`;
+    packBody.style.clipPath = `inset(${TEAR_Y - 0.6}% 0 0 0)`;
+    pack.style.setProperty("--tear-y", `${TEAR_Y}%`);
   }
 
   /* ------------------------------------------------------------------
@@ -84,6 +75,8 @@
     // la jauge redescend plus vite qu'elle ne monte quand on relâche
     progress += holding ? dt / HOLD_MS : -dt / 500;
     progress = Math.max(0, Math.min(1, progress));
+    // la fréquence d'oscillation augmente doucement avec la charge
+    phase += dt * 0.001 * Math.PI * 2 * (2.5 + progress * 4.5);
     renderCharge(progress);
 
     if (progress >= 1) {
@@ -99,16 +92,18 @@
   }
 
   function renderCharge(p) {
+    // secousse sinusoïdale (pas d'aléatoire) : l'amplitude suit la charge, donc tout retombe en douceur
     const e = p * p;
-    const amp = holding && !reducedMotion ? 0.6 + e * 7 : 0;
-    const x = (Math.random() * 2 - 1) * amp;
-    const y = (Math.random() * 2 - 1) * amp * 0.6;
-    const r = (Math.random() * 2 - 1) * (holding && !reducedMotion ? 0.3 + e * 3.5 : 0);
-    const s = 1 + 0.08 * (1 - (1 - p) * (1 - p));
+    const amp = reducedMotion ? 0 : p * 1.2 + e * 3;
+    const rot = reducedMotion ? 0 : p * 0.6 + e * 1.8;
+    const x = Math.sin(phase) * amp;
+    const y = Math.cos(phase * 1.3) * amp * 0.35;
+    const r = Math.sin(phase * 0.85 + 1) * rot;
+    const s = 1 + 0.07 * (1 - (1 - p) * (1 - p));
     pack.style.transform = `translate(${x}px, ${y}px) rotate(${r}deg) scale(${s})`;
-    tearSvg.style.clipPath = `inset(-10% ${(1 - p) * 100}% -10% 0)`;
+    pack.style.setProperty("--tear-p", p);
     progressBar.style.width = `${p * 100}%`;
-    if (holding && navigator.vibrate && Math.random() < e * 0.15) navigator.vibrate(8);
+    if (holding && navigator.vibrate && Math.random() < e * 0.08) navigator.vibrate(6);
   }
 
   /* ------------------------------------------------------------------
@@ -120,7 +115,7 @@
     hint.textContent = "";
     pack.style.transform = "scale(1.08)";
     if (navigator.vibrate) navigator.vibrate([30, 40, 60]);
-    flashScreen(0.5);
+    flashScreen(0.5, brand("--r-commun"));
 
     buildDeck();
 
@@ -133,7 +128,7 @@
       ],
       { duration: reducedMotion ? 400 : 1200, easing: "cubic-bezier(.45,0,.8,.4)", fill: "forwards" }
     );
-    tearSvg.style.opacity = "0";
+    tearGuide.style.opacity = "0";
 
     await wait(reducedMotion ? 150 : 380);
 
@@ -239,16 +234,16 @@
 
   // illustration provisoire quand aucune image n'est fournie
   function placeholderArt(c) {
-    const color = brand(`--r-${c.rarity}`) || brand("--coral");
-    const ink = brand("--ink");
+    const color = brand(`--r-${c.rarity}`) || brand("--r-commun");
     const initials = c.title.replace(/[^A-Za-zÀ-ÿ ]/g, "").split(" ").map((w) => w[0]).join("").slice(0, 2);
     return `
       <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(c.imageAlt || c.title)}">
-        <rect width="160" height="100" fill="${ink}"/>
-        <circle cx="80" cy="50" r="38" fill="${color}" opacity=".9"/>
-        <text x="80" y="64" text-anchor="middle" font-family="Bohemian Soul, Georgia, serif" font-size="40" fill="#fff">${esc(initials)}</text>
+        <rect width="160" height="100" fill="${brand("--media")}"/>
+        <circle cx="80" cy="50" r="36" fill="${color}"/>
+        <text x="80" y="50" text-anchor="middle" dominant-baseline="central" font-family="Bohemian Soul, Georgia, serif" font-size="38" fill="${brand("--ink")}">${esc(initials)}</text>
       </svg>`;
   }
+
 
   function onCardClick() {
     if (state !== "deck") return;
@@ -323,9 +318,9 @@
     const level = RARITY_ORDER.indexOf(data.rarity);
     if (level < 1) return;
     const colorVar = { rare: "--r-rare", epique: "--r-epique", legendaire: "--r-legendaire" }[data.rarity];
-    const colors = [brand(colorVar), brand("--coral"), "#ffffff"];
+    const colors = [brand(colorVar), brand("--r-commun"), brand("--ink")];
     setTimeout(() => {
-      if (level >= 3) flashScreen(0.7);
+      if (level >= 3) flashScreen(0.6, brand(colorVar));
       if (level >= 2 && navigator.vibrate) navigator.vibrate(level >= 3 ? [40, 30, 80] : 40);
       burst(el.getBoundingClientRect(), colors, [0, 16, 36, 70][level]);
     }, reducedMotion ? 0 : 280);
@@ -356,10 +351,12 @@
     }
   }
 
-  function flashScreen(strength) {
+  function flashScreen(strength, color) {
     if (reducedMotion) return;
-    flash.animate([{ opacity: strength }, { opacity: 0 }], { duration: 500, easing: "ease-out" });
+    flash.style.background = color;
+    flash.animate([{ opacity: strength }, { opacity: 0 }], { duration: 600, easing: "ease-out" });
   }
+
 
   /* ------------------------------------------------------------------
      Récap + nouveau booster
@@ -392,7 +389,8 @@
     packWrap.getAnimations().forEach((a) => a.cancel());
     packWrap.hidden = false;
     pack.style.transform = "";
-    tearSvg.style.opacity = "";
+    tearGuide.style.opacity = "";
+    phase = 0;
     progress = 0;
     renderCharge(0);
     buildPack();

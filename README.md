@@ -22,6 +22,6 @@ Ouvrir `index.html` dans un navigateur (aucune dépendance, aucun build).
 | Logo, trame, police Bohemian Soul | dossier `assets/` |
 | Durée d'appui, hauteur de la déchirure | constantes en haut de `app.js` |
 
-Raretés : commun = corail, rare = bleu, épique = violet, légendaire = jaune/orange. Titres en Bohemian Soul, textes en Century Gothic (Didact Gothic en secours si la police n'est pas installée).
+Raretés : commun = rose, rare = bleu, épique = violet, légendaire = jaune. Fond blanc, textes noirs. Titres en Bohemian Soul, textes en Century Gothic (Didact Gothic en secours si la police n'est pas installée).
 
 Sans `image`, une illustration provisoire est générée dans la couleur de la rareté. Les champs marqués `TODO` sont à vérifier avec le contenu exact du site agence-positive.fr.

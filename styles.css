@@ -9,16 +9,17 @@
 }
 
 :root {
-  --ink: #3c3c3b;        /* gris anthracite du logo */
-  --ink-deep: #232322;   /* fond de page / cadre des cartes */
-  --coral: #f18867;      /* corail du site */
-  --paper: #ffffff;
+  --page: #ffffff;       /* fond du site */
+  --paper: #ffffff;      /* cadre et dos des cartes */
+  --ink: #232322;        /* textes (noir pour le contraste) */
+  --media: #f5f3f1;      /* fond des visuels provisoires */
+  --shadow: rgba(40, 30, 25, 0.16);
 
-  /* Couleurs de rareté (TODO : ajuster aux valeurs exactes de la charte) */
-  --r-commun: #f18867;     /* corail */
-  --r-rare: #3f6fd8;       /* bleu */
-  --r-epique: #8943fa;     /* violet */
-  --r-legendaire: #f7a823; /* jaune / orange */
+  /* Couleurs de la charte, une par rareté */
+  --r-commun: #f9b9a2;     /* rose */
+  --r-rare: #9fd8f1;       /* bleu */
+  --r-epique: #b2a9d4;     /* violet */
+  --r-legendaire: #ffda8e; /* jaune (alternative plus vive : #fff264) */
 
   --font-title: "Bohemian Soul", Georgia, serif;
   --font-body: "Century Gothic", CenturyGothic, "Didact Gothic", AppleGothic, sans-serif;
@@ -33,7 +34,7 @@
   --pack-h: calc(var(--pack-w) * 1.6);
   --radius: calc(var(--card-w) * 0.06);
 
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
@@ -45,9 +46,9 @@ html, body {
 
 body {
   background:
-    radial-gradient(55% 45% at 50% 45%, color-mix(in srgb, var(--coral) 18%, transparent), transparent 70%),
-    var(--ink-deep);
-  color: var(--paper);
+    radial-gradient(55% 45% at 50% 45%, color-mix(in srgb, var(--r-commun) 22%, transparent), transparent 70%),
+    var(--page);
+  color: var(--ink);
   font-family: var(--font-body);
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
@@ -62,12 +63,14 @@ body {
   place-items: center;
 }
 
-/* trame de fond réutilisable (lignes blanches) */
+/* trame de fond réutilisable : le SVG sert de masque, sa couleur est réglable */
 .trame::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: var(--trame) center / cover no-repeat;
+  background: var(--trame-color, #fff);
+  -webkit-mask: var(--trame) center / cover no-repeat;
+  mask: var(--trame) center / cover no-repeat;
   opacity: var(--trame-opacity, 0.35);
   pointer-events: none;
 }
@@ -92,11 +95,11 @@ body {
   touch-action: none;
   -webkit-touch-callout: none;
   will-change: transform;
-  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.55));
+  filter: drop-shadow(0 24px 32px var(--shadow));
   outline: none;
 }
 .pack:active { cursor: grabbing; }
-.pack:focus-visible { outline: 3px solid var(--paper); outline-offset: 10px; border-radius: 8px; }
+.pack:focus-visible { outline: 3px solid var(--ink); outline-offset: 10px; border-radius: 8px; }
 
 .pack-piece {
   position: absolute;
@@ -110,9 +113,9 @@ body {
   inset: 0;
   overflow: hidden;
   border-radius: 6px;
-  background: linear-gradient(170deg, color-mix(in srgb, var(--coral) 88%, #fff) 0%, var(--coral) 45%, color-mix(in srgb, var(--coral) 82%, #a8402a) 100%);
+  background: linear-gradient(170deg, color-mix(in srgb, var(--r-commun) 70%, #fff) 0%, var(--r-commun) 50%, color-mix(in srgb, var(--r-commun) 88%, #c06a50) 100%);
   color: var(--ink);
-  --trame-opacity: 0.55;
+  --trame-opacity: 0.7;
 }
 
 .pack-crimp {
@@ -150,7 +153,7 @@ body {
   font-weight: 400;
   font-size: 27cqw;
   line-height: 0.9;
-  color: var(--paper);
+  color: var(--ink);
 }
 
 .pack-sub {
@@ -177,23 +180,24 @@ body {
   50% { background-position: -20% 0; }
 }
 
-/* ligne de déchirure qui se dessine pendant l'appui */
-.tear-line {
+/* pointillé de découpe : un guide discret, repassé de gauche à droite pendant l'appui */
+.tear-guide {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  left: 0;
+  right: 0;
+  top: var(--tear-y, 15%);
+  border-top: 2px dashed color-mix(in srgb, var(--ink) 30%, transparent);
   z-index: 3;
   pointer-events: none;
-  overflow: visible;
-  clip-path: inset(-10% 100% -10% 0);
+  transition: opacity 0.3s;
 }
-.tear-line polyline {
-  fill: none;
-  stroke: var(--paper);
-  stroke-width: 2.5;
-  vector-effect: non-scaling-stroke;
-  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9));
+.tear-guide span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -2px;
+  border-top: 2px dashed var(--ink);
+  clip-path: inset(-4px calc((1 - var(--tear-p, 0)) * 100%) -4px 0);
 }
 
 /* =================================================================
@@ -223,7 +227,7 @@ body {
   width: min(220px, 60vw);
   height: 4px;
   border-radius: 99px;
-  background: rgba(255, 255, 255, 0.15);
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
   overflow: hidden;
 }
 .progress span {
@@ -231,7 +235,7 @@ body {
   height: 100%;
   width: 0;
   border-radius: inherit;
-  background: var(--coral);
+  background: var(--ink);
 }
 .hud.is-deck .progress { display: none; }
 
@@ -279,43 +283,42 @@ body {
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 14px 34px var(--shadow);
 }
 
 /* rareté → couleur de fond + couleur du texte */
-[data-rarity="commun"] { --rc: var(--r-commun); --on: var(--paper); --glow: var(--r-commun); }
-[data-rarity="rare"] { --rc: var(--r-rare); --on: var(--paper); --glow: var(--r-rare); }
-[data-rarity="epique"] { --rc: var(--r-epique); --on: var(--paper); --glow: var(--r-epique); }
-[data-rarity="legendaire"] { --rc: var(--r-legendaire); --on: var(--ink-deep); --glow: var(--r-legendaire); }
+[data-rarity="commun"] { --rc: var(--r-commun); --glow: var(--r-commun); }
+[data-rarity="rare"] { --rc: var(--r-rare); --glow: var(--r-rare); }
+[data-rarity="epique"] { --rc: var(--r-epique); --glow: var(--r-epique); }
+[data-rarity="legendaire"] { --rc: var(--r-legendaire); --glow: var(--r-legendaire); }
 
 /* ---------- dos de carte ---------- */
 .card-back {
-  background: var(--ink);
-  border: 2.6cqw solid var(--ink-deep);
+  background: var(--paper);
   display: grid;
   place-items: center;
-  --trame-opacity: 0.4;
+  --trame-color: var(--r-commun);
+  --trame-opacity: 0.9;
 }
 .card-back-logo {
   position: relative;
   width: 74%;
   aspect-ratio: 742.52 / 183.61;
   background: var(--logo) center / contain no-repeat;
-  filter: brightness(0) invert(1);
 }
 .card[data-rarity="epique"] .card-back,
 .card[data-rarity="legendaire"] .card-back {
   animation: backGlow 1.6s ease-in-out infinite;
 }
 @keyframes backGlow {
-  0%, 100% { box-shadow: 0 0 20px 2px var(--glow), 0 18px 40px rgba(0, 0, 0, 0.5); }
-  50% { box-shadow: 0 0 46px 10px var(--glow), 0 18px 40px rgba(0, 0, 0, 0.5); }
+  0%, 100% { box-shadow: 0 0 24px 4px var(--glow), 0 14px 34px var(--shadow); }
+  50% { box-shadow: 0 0 56px 16px var(--glow), 0 14px 34px var(--shadow); }
 }
 
 /* ---------- face avant ---------- */
 .card-front {
   transform: rotateY(180deg);
-  background: var(--ink-deep);
+  background: var(--paper);
   padding: 2.6cqw;
 }
 
@@ -333,7 +336,7 @@ body {
   position: relative;
   flex: 1 1 0;
   min-height: 34%;
-  background: var(--ink);
+  background: var(--media);
   overflow: hidden;
 }
 .front-media img,
@@ -353,12 +356,12 @@ body {
   padding: 1.4cqw 3.4cqw;
   border-radius: 2.4cqw;
   background: var(--rc);
-  color: var(--on);
+  color: var(--ink);
   font-size: 3.6cqw;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  box-shadow: 0 1cqw 3cqw rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1cqw 3cqw var(--shadow);
 }
 
 .front-body {
@@ -369,9 +372,9 @@ body {
   flex-direction: column;
   gap: 2cqw;
   padding: 5cqw 6cqw 4.5cqw;
-  color: var(--on);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--rc) 82%, #fff), var(--rc) 60%);
-  --trame-opacity: 0.45;
+  color: var(--ink);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--rc) 80%, #fff), var(--rc) 60%);
+  --trame-opacity: 0.55;
 }
 .front-body > * { position: relative; }
 
@@ -417,21 +420,26 @@ body {
   align-items: center;
   gap: 2cqw;
   padding-top: 3cqw;
-  border-top: 0.4cqw solid color-mix(in srgb, var(--on) 35%, transparent);
+  border-top: 0.4cqw solid color-mix(in srgb, var(--ink) 25%, transparent);
 }
 .front-energy {
   display: flex;
-  align-items: baseline;
-  gap: 1.6cqw;
+  align-items: center;
+  gap: 1.8cqw;
+  font-family: var(--font-body);
   font-weight: 700;
-  font-size: 6cqw;
+  font-size: 5.6cqw;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 .front-energy small {
+  font-family: var(--font-body);
   font-size: 2.8cqw;
+  font-weight: 400;
+  line-height: 1;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  opacity: 0.8;
+  opacity: 0.55;
 }
 .front-foot a {
   color: inherit;
@@ -444,7 +452,6 @@ body {
   aspect-ratio: 742.52 / 183.61;
   background: var(--logo) center / contain no-repeat;
 }
-[data-rarity]:not([data-rarity="legendaire"]) .foot-logo { filter: brightness(0) invert(1); }
 
 /* reflet holographique (suit le pointeur) */
 .card-front::after {
@@ -487,6 +494,7 @@ body {
   font-family: var(--font-title);
   font-weight: 400;
   font-size: clamp(34px, 7vw, 56px);
+  color: var(--ink);
 }
 .summary-grid {
   display: flex;
@@ -511,13 +519,13 @@ body {
   padding: 14px 26px;
   border: 0;
   border-radius: 99px;
-  background: var(--coral);
-  color: var(--ink-deep);
+  background: var(--ink);
+  color: var(--paper);
   cursor: pointer;
   transition: transform 0.2s;
 }
 .btn:hover { transform: translateY(-2px) scale(1.03); }
-.btn:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
+.btn:focus-visible { outline: 3px solid var(--r-epique); outline-offset: 3px; }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
@@ -530,7 +538,7 @@ body {
 .flash {
   position: fixed;
   inset: 0;
-  background: #fff;
+  background: var(--r-commun);
   opacity: 0;
   pointer-events: none;
   z-index: 20;

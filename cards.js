@@ -2,7 +2,7 @@
  * Contenu des cartes du booster.
  * ---------------------------------------------------------------
  * Pour modifier une carte, il suffit d'éditer ce fichier.
- *  - rarity : "commun" (corail) | "rare" (bleu) | "epique" (violet) | "legendaire" (jaune/orange)
+ *  - rarity : "commun" (rose) | "rare" (bleu) | "epique" (violet) | "legendaire" (jaune)
  *  - image  : URL ou chemin (ex: "assets/celine.jpg"). Laisser vide
  *             pour afficher une illustration générée aux couleurs de l'agence.
  *  - Les champs marqués  TODO  sont à vérifier / compléter avec le
