@@ -1,34 +1,39 @@
 /* =================================================================
-   DIRECTION ARTISTIQUE
-   Toutes les couleurs / typos de la marque sont centralisées ici.
-   TODO : remplacer par les valeurs exactes de la charte agence-positive.fr
+   DIRECTION ARTISTIQUE — agence Positive
+   Couleurs, typos et assets centralisés ici.
    ================================================================= */
+@font-face {
+  font-family: "Bohemian Soul";
+  src: url("assets/fonts/BohemianSoul.otf") format("opentype");
+  font-display: swap;
+}
+
 :root {
-  /* Corail : couleur de marque relevée sur agence-positive.fr ;
-     noir et blanc : déclinaisons du logo. */
-  --brand-primary: #f18867;   /* corail Positive */
-  --brand-secondary: #fbc8b4; /* corail clair */
-  --brand-tertiary: #c95a3c;  /* corail profond */
-  --brand-dark: #1d1d1b;      /* noir logo */
-  --brand-light: #ffffff;     /* blanc logo */
-  color-scheme: dark;
+  --ink: #3c3c3b;        /* gris anthracite du logo */
+  --ink-deep: #232322;   /* fond de page / cadre des cartes */
+  --coral: #f18867;      /* corail du site */
+  --paper: #ffffff;
 
-  /* TODO : polices exactes du site (non incluses dans la page HTML fournie) */
-  --font-title: "Syne", system-ui, sans-serif;
-  --font-body: "DM Sans", system-ui, sans-serif;
+  /* Couleurs de rareté (TODO : ajuster aux valeurs exactes de la charte) */
+  --r-commun: #f18867;     /* corail */
+  --r-rare: #3f6fd8;       /* bleu */
+  --r-epique: #8943fa;     /* violet */
+  --r-legendaire: #f7a823; /* jaune / orange */
 
-  /* Couleurs de rareté */
-  --r-commun: #a7a3b3;
-  --r-rare: #3ca8ff;
-  --r-epique: #a855f7;
-  --r-legendaire: #ffbf1f;
+  --font-title: "Bohemian Soul", Georgia, serif;
+  --font-body: "Century Gothic", CenturyGothic, "Didact Gothic", AppleGothic, sans-serif;
+
+  --trame: url("assets/trame.svg");
+  --logo: url("assets/logo-agence-positive.svg");
 
   /* Dimensions */
-  --card-w: min(260px, 64vw, 40vh);
-  --card-h: calc(var(--card-w) * 1.4);
-  --pack-w: calc(var(--card-w) * 1.18);
-  --pack-h: calc(var(--pack-w) * 1.62);
-  --radius: calc(var(--card-w) * 0.055);
+  --card-w: min(270px, 66vw, 42vh);
+  --card-h: calc(var(--card-w) * 1.42);
+  --pack-w: calc(var(--card-w) * 1.16);
+  --pack-h: calc(var(--pack-w) * 1.6);
+  --radius: calc(var(--card-w) * 0.06);
+
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -40,10 +45,9 @@ html, body {
 
 body {
   background:
-    radial-gradient(60% 50% at 50% 45%, color-mix(in srgb, var(--brand-primary) 22%, transparent), transparent 70%),
-    radial-gradient(40% 40% at 80% 90%, color-mix(in srgb, var(--brand-tertiary) 20%, transparent), transparent 70%),
-    var(--brand-dark);
-  color: var(--brand-light);
+    radial-gradient(55% 45% at 50% 45%, color-mix(in srgb, var(--coral) 18%, transparent), transparent 70%),
+    var(--ink-deep);
+  color: var(--paper);
   font-family: var(--font-body);
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
@@ -56,6 +60,16 @@ body {
   height: 100%;
   display: grid;
   place-items: center;
+}
+
+/* trame de fond réutilisable (lignes blanches) */
+.trame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--trame) center / cover no-repeat;
+  opacity: var(--trame-opacity, 0.35);
+  pointer-events: none;
 }
 
 /* =================================================================
@@ -82,7 +96,7 @@ body {
   outline: none;
 }
 .pack:active { cursor: grabbing; }
-.pack:focus-visible { outline: 3px solid var(--brand-secondary); outline-offset: 10px; border-radius: 8px; }
+.pack:focus-visible { outline: 3px solid var(--paper); outline-offset: 10px; border-radius: 8px; }
 
 .pack-piece {
   position: absolute;
@@ -96,32 +110,21 @@ body {
   inset: 0;
   overflow: hidden;
   border-radius: 6px;
-  background:
-    linear-gradient(160deg, var(--brand-primary) 0%, color-mix(in srgb, var(--brand-primary) 70%, var(--brand-secondary)) 55%, var(--brand-secondary) 100%);
-  color: var(--brand-dark);
+  background: linear-gradient(170deg, color-mix(in srgb, var(--coral) 88%, #fff) 0%, var(--coral) 45%, color-mix(in srgb, var(--coral) 82%, #a8402a) 100%);
+  color: var(--ink);
+  --trame-opacity: 0.55;
 }
 
 .pack-crimp {
   position: absolute;
   left: 0;
   right: 0;
-  height: 4.5%;
-  background:
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.35) 0 2px, rgba(0, 0, 0, 0.12) 2px 3px, transparent 3px 6px),
-    color-mix(in srgb, var(--brand-dark) 18%, transparent);
+  height: 4%;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.3) 0 1px, transparent 1px 4px);
   z-index: 3;
 }
 .pack-crimp--top { top: 0; }
 .pack-crimp--bottom { bottom: 0; }
-
-.pack-pattern {
-  position: absolute;
-  inset: -20%;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.22) 2px, transparent 2.5px);
-  background-size: 18px 18px;
-  transform: rotate(-12deg);
-  opacity: 0.7;
-}
 
 .pack-content {
   position: absolute;
@@ -130,74 +133,41 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4%;
-  padding: 20% 8% 12%;
+  gap: 5%;
+  padding: 22% 10% 14%;
   text-align: center;
   container-type: inline-size;
 }
 
 .pack-logo {
-  font-family: var(--font-title);
-  font-weight: 800;
-  font-size: 13cqw;
-  letter-spacing: -0.03em;
-  color: var(--brand-dark);
-  display: flex;
-  align-items: center;
-  gap: 0.08em;
-}
-.logo-plus {
-  display: inline-grid;
-  place-items: center;
-  width: 0.9em;
-  height: 0.9em;
-  border-radius: 50%;
-  background: var(--brand-dark);
-  color: var(--brand-secondary);
-  font-size: 0.85em;
-  line-height: 1;
+  width: 78cqw;
+  aspect-ratio: 742.52 / 183.61;
+  background: var(--logo) center / contain no-repeat;
 }
 
 .pack-title {
   font-family: var(--font-title);
-  font-weight: 800;
-  font-size: 13.5cqw;
+  font-weight: 400;
+  font-size: 27cqw;
   line-height: 0.9;
-  text-transform: uppercase;
-  color: var(--brand-light);
-  -webkit-text-stroke: 0.6cqw var(--brand-dark);
-  paint-order: stroke fill;
-  text-shadow: 1.2cqw 1.2cqw 0 var(--brand-dark);
+  color: var(--paper);
 }
 
 .pack-sub {
+  font-size: 4.6cqw;
   font-weight: 700;
-  font-size: 5cqw;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-}
-
-.pack-badge {
-  margin-top: 6%;
-  width: 28cqw;
-  height: 28cqw;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--brand-dark);
-  color: var(--brand-secondary);
-  font-family: var(--font-title);
-  font-weight: 800;
-  font-size: 22cqw;
-  line-height: 1;
-  box-shadow: 0 0 0 1.5cqw var(--brand-light);
+  letter-spacing: 0.18em;
+  padding: 2cqw 4cqw;
+  border: 0.5cqw solid currentColor;
+  border-radius: 99px;
 }
 
 /* reflet métallisé */
 .pack-foil {
   position: absolute;
   inset: 0;
-  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.55) 45%, transparent 60%);
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.5) 45%, transparent 60%);
   background-size: 250% 100%;
   mix-blend-mode: overlay;
   animation: foil 4s ease-in-out infinite;
@@ -220,7 +190,7 @@ body {
 }
 .tear-line polyline {
   fill: none;
-  stroke: var(--brand-light);
+  stroke: var(--paper);
   stroke-width: 2.5;
   vector-effect: non-scaling-stroke;
   filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9));
@@ -244,7 +214,6 @@ body {
 }
 .hint {
   margin: 0;
-  font-weight: 500;
   font-size: 15px;
   letter-spacing: 0.02em;
   opacity: 0.85;
@@ -252,7 +221,7 @@ body {
 }
 .progress {
   width: min(220px, 60vw);
-  height: 6px;
+  height: 4px;
   border-radius: 99px;
   background: rgba(255, 255, 255, 0.15);
   overflow: hidden;
@@ -262,7 +231,7 @@ body {
   height: 100%;
   width: 0;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+  background: var(--coral);
 }
 .hud.is-deck .progress { display: none; }
 
@@ -313,38 +282,31 @@ body {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
 }
 
+/* rareté → couleur de fond + couleur du texte */
+[data-rarity="commun"] { --rc: var(--r-commun); --on: var(--paper); --glow: var(--r-commun); }
+[data-rarity="rare"] { --rc: var(--r-rare); --on: var(--paper); --glow: var(--r-rare); }
+[data-rarity="epique"] { --rc: var(--r-epique); --on: var(--paper); --glow: var(--r-epique); }
+[data-rarity="legendaire"] { --rc: var(--r-legendaire); --on: var(--ink-deep); --glow: var(--r-legendaire); }
+
 /* ---------- dos de carte ---------- */
 .card-back {
-  background:
-    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--brand-primary) 70%, transparent) 0 18%, transparent 19%),
-    repeating-conic-gradient(from 0deg at 50% 50%, color-mix(in srgb, var(--brand-tertiary) 35%, var(--brand-dark)) 0 10deg, var(--brand-dark) 10deg 20deg);
-  border: 2.4cqw solid var(--brand-light);
+  background: var(--ink);
+  border: 2.6cqw solid var(--ink-deep);
   display: grid;
   place-items: center;
+  --trame-opacity: 0.4;
 }
 .card-back-logo {
-  display: grid;
-  place-items: center;
-  gap: 4cqw;
-  font-family: var(--font-title);
-  font-weight: 800;
-  color: var(--brand-light);
-  font-size: 10cqw;
-  letter-spacing: -0.02em;
-}
-.card-back-logo .logo-plus {
-  width: 34cqw;
-  height: 34cqw;
-  font-size: 28cqw;
-  background: var(--brand-secondary);
-  color: var(--brand-dark);
+  position: relative;
+  width: 74%;
+  aspect-ratio: 742.52 / 183.61;
+  background: var(--logo) center / contain no-repeat;
+  filter: brightness(0) invert(1);
 }
 .card[data-rarity="epique"] .card-back,
 .card[data-rarity="legendaire"] .card-back {
   animation: backGlow 1.6s ease-in-out infinite;
 }
-.card[data-rarity="epique"] { --glow: var(--r-epique); }
-.card[data-rarity="legendaire"] { --glow: var(--r-legendaire); }
 @keyframes backGlow {
   0%, 100% { box-shadow: 0 0 20px 2px var(--glow), 0 18px 40px rgba(0, 0, 0, 0.5); }
   50% { box-shadow: 0 0 46px 10px var(--glow), 0 18px 40px rgba(0, 0, 0, 0.5); }
@@ -353,167 +315,136 @@ body {
 /* ---------- face avant ---------- */
 .card-front {
   transform: rotateY(180deg);
-  --rc: var(--r-commun);
-  background: var(--rc);
+  background: var(--ink-deep);
   padding: 2.6cqw;
-}
-[data-rarity="rare"] .card-front, .mini-card[data-rarity="rare"] { --rc: var(--r-rare); }
-[data-rarity="epique"] .card-front, .mini-card[data-rarity="epique"] { --rc: var(--r-epique); }
-[data-rarity="legendaire"] .card-front, .mini-card[data-rarity="legendaire"] { --rc: var(--r-legendaire); }
-[data-rarity="legendaire"] .card-front {
-  background: linear-gradient(135deg, #ffe27a, var(--r-legendaire) 30%, #fff3c4 50%, #e59a00 75%, #ffe27a);
 }
 
 .front {
   position: relative;
   height: 100%;
-  border-radius: calc(var(--radius) * 0.7);
-  background: var(--brand-light);
-  color: var(--brand-dark);
+  border-radius: calc(var(--radius) * 0.75);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 3.4cqw 4cqw 3cqw;
-  gap: 2.4cqw;
-  overflow: hidden;
+  background: var(--rc);
 }
 
-.front-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 2cqw;
+.front-media {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 34%;
+  background: var(--ink);
+  overflow: hidden;
 }
-.front-type {
+.front-media img,
+.front-media svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
+}
+
+.rarity-pill {
+  position: absolute;
+  top: 4cqw;
+  left: 4cqw;
+  padding: 1.4cqw 3.4cqw;
+  border-radius: 2.4cqw;
+  background: var(--rc);
+  color: var(--on);
   font-size: 3.6cqw;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: color-mix(in srgb, var(--rc) 70%, var(--brand-dark));
+  text-transform: uppercase;
+  box-shadow: 0 1cqw 3cqw rgba(0, 0, 0, 0.25);
+}
+
+.front-body {
+  position: relative;
+  flex: 0 0 auto;
+  min-height: 52%;
+  display: flex;
+  flex-direction: column;
+  gap: 2cqw;
+  padding: 5cqw 6cqw 4.5cqw;
+  color: var(--on);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--rc) 82%, #fff), var(--rc) 60%);
+  --trame-opacity: 0.45;
+}
+.front-body > * { position: relative; }
+
+.front-type {
+  font-size: 3.3cqw;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  opacity: 0.8;
 }
 .front-title {
   margin: 0;
   font-family: var(--font-title);
-  font-weight: 800;
-  font-size: 7.6cqw;
-  line-height: 1;
+  font-weight: 400;
+  font-size: 11cqw;
+  line-height: 0.95;
   text-wrap: balance;
-  letter-spacing: -0.02em;
 }
-.front-energy {
-  flex: none;
-  display: flex;
-  align-items: center;
-  gap: 1cqw;
-  font-family: var(--font-title);
-  font-weight: 800;
-  font-size: 7cqw;
-  line-height: 1;
-}
-.front-energy small {
-  font-family: var(--font-body);
-  font-size: 2.8cqw;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-.front-energy .logo-plus {
-  width: 6.4cqw;
-  height: 6.4cqw;
-  font-size: 5cqw;
-  background: var(--brand-primary);
-  color: var(--brand-light);
-}
-
-.front-img {
-  position: relative;
-  flex: 1 1 0;
-  min-height: 24cqw;
-  border-radius: 2cqw;
-  overflow: hidden;
-  border: 1.2cqw solid var(--rc);
-  background: var(--brand-dark);
-}
-.front-img img, .front-img svg {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.front-band {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 3cqw;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.rarity-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 1.2cqw;
-  padding: 0.8cqw 2.4cqw;
-  border-radius: 99px;
-  background: var(--rc);
-  color: var(--brand-dark);
-}
-.gems { letter-spacing: 0.05em; }
-
 .front-desc {
   margin: 0;
-  font-size: 3.7cqw;
-  line-height: 1.35;
-}
-
-.front-ability {
-  padding: 2cqw 2.6cqw;
-  border-radius: 2cqw;
-  background: color-mix(in srgb, var(--rc) 18%, var(--brand-light));
-  font-size: 3.3cqw;
-  line-height: 1.3;
-}
-.front-ability strong {
-  display: block;
-  font-family: var(--font-title);
-  font-size: 4cqw;
-  margin-bottom: 0.4cqw;
+  font-size: 3.9cqw;
+  line-height: 1.4;
 }
 
 .front-facts {
   margin: 0;
   display: grid;
-  gap: 0.8cqw;
-  font-size: 3.1cqw;
+  gap: 1cqw;
+  font-size: 3.3cqw;
 }
 .front-facts div {
   display: flex;
   justify-content: space-between;
   gap: 2cqw;
-  border-top: 0.3cqw dashed color-mix(in srgb, var(--brand-dark) 25%, transparent);
-  padding-top: 0.8cqw;
 }
-.front-facts dt { font-weight: 700; opacity: 0.6; }
-.front-facts dd { margin: 0; text-align: right; font-weight: 500; }
+.front-facts dt { opacity: 0.75; }
+.front-facts dd { margin: 0; text-align: right; font-weight: 700; }
 
 .front-foot {
+  margin-top: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 2cqw;
+  padding-top: 3cqw;
+  border-top: 0.4cqw solid color-mix(in srgb, var(--on) 35%, transparent);
+}
+.front-energy {
+  display: flex;
+  align-items: baseline;
+  gap: 1.6cqw;
+  font-weight: 700;
+  font-size: 6cqw;
+  font-variant-numeric: tabular-nums;
+}
+.front-energy small {
   font-size: 2.8cqw;
-  opacity: 0.75;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
 }
 .front-foot a {
   color: inherit;
+  font-size: 3.2cqw;
   font-weight: 700;
-  pointer-events: auto;
+  text-underline-offset: 0.6cqw;
 }
-.front-foot .mini-logo {
-  font-family: var(--font-title);
-  font-weight: 800;
+.front-foot .foot-logo {
+  width: 26cqw;
+  aspect-ratio: 742.52 / 183.61;
+  background: var(--logo) center / contain no-repeat;
 }
+[data-rarity]:not([data-rarity="legendaire"]) .foot-logo { filter: brightness(0) invert(1); }
 
 /* reflet holographique (suit le pointeur) */
 .card-front::after {
@@ -523,18 +454,17 @@ body {
   pointer-events: none;
   border-radius: inherit;
   background:
-    radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgba(255, 255, 255, 0.55), transparent 45%),
-    linear-gradient(115deg, transparent 20%, rgba(255, 0, 140, 0.35) 35%, rgba(0, 220, 255, 0.35) 50%, rgba(255, 230, 0, 0.35) 65%, transparent 80%);
+    radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgba(255, 255, 255, 0.45), transparent 45%),
+    linear-gradient(115deg, transparent 25%, rgba(255, 255, 255, 0.35) 50%, transparent 75%);
   background-size: 100% 100%, 250% 250%;
   background-position: 0 0, var(--mx, 50%) var(--my, 50%);
-  mix-blend-mode: color-dodge;
+  mix-blend-mode: soft-light;
   opacity: 0;
   transition: opacity 0.3s;
 }
-.card[data-rarity="commun"].is-flipped .card-front::after { opacity: 0.08; }
-.card[data-rarity="rare"].is-flipped .card-front::after { opacity: 0.25; }
-.card[data-rarity="epique"].is-flipped .card-front::after { opacity: 0.45; }
-.card[data-rarity="legendaire"].is-flipped .card-front::after { opacity: 0.7; }
+.card[data-rarity="rare"].is-flipped .card-front::after { opacity: 0.35; }
+.card[data-rarity="epique"].is-flipped .card-front::after { opacity: 0.6; }
+.card[data-rarity="legendaire"].is-flipped .card-front::after { opacity: 0.9; }
 
 /* =================================================================
    RÉCAP
@@ -555,9 +485,8 @@ body {
 .summary-title {
   margin: 0;
   font-family: var(--font-title);
-  font-weight: 800;
-  font-size: clamp(28px, 6vw, 44px);
-  letter-spacing: -0.02em;
+  font-weight: 400;
+  font-size: clamp(34px, 7vw, 56px);
 }
 .summary-grid {
   display: flex;
@@ -566,9 +495,8 @@ body {
   gap: 16px;
 }
 .mini-card {
-  --rc: var(--r-commun);
-  width: min(200px, 42vw);
-  aspect-ratio: 1 / 1.4;
+  width: min(210px, 42vw);
+  aspect-ratio: 1 / 1.42;
   position: relative;
   container-type: inline-size;
   animation: fadeUp 0.5s ease both;
@@ -583,14 +511,13 @@ body {
   padding: 14px 26px;
   border: 0;
   border-radius: 99px;
-  background: var(--brand-primary);
-  color: var(--brand-light);
+  background: var(--coral);
+  color: var(--ink-deep);
   cursor: pointer;
-  box-shadow: 0 8px 24px color-mix(in srgb, var(--brand-primary) 45%, transparent);
   transition: transform 0.2s;
 }
 .btn:hover { transform: translateY(-2px) scale(1.03); }
-.btn:focus-visible { outline: 3px solid var(--brand-secondary); outline-offset: 3px; }
+.btn:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
@@ -617,15 +544,9 @@ body {
 }
 .particle {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-}
-.particle.is-plus {
-  width: auto;
-  height: auto;
-  background: none !important;
-  font: 800 18px var(--font-title);
 }
 
 @media (prefers-reduced-motion: reduce) {

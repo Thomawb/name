@@ -7,7 +7,7 @@
   <meta name="description" content="Ouvre un booster de l'agence Positive et découvre ses cartes." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -20,14 +20,12 @@
       <button class="pack" id="pack" type="button" aria-label="Maintenir appuyé pour ouvrir le booster">
         <!-- Le visuel du pack est cloné en deux morceaux (haut déchirable + corps) par app.js -->
         <template id="packArt">
-          <div class="pack-art">
+          <div class="pack-art trame">
             <div class="pack-crimp pack-crimp--top"></div>
-            <div class="pack-pattern"></div>
             <div class="pack-content">
-              <div class="pack-logo"><span class="logo-plus">+</span>positive</div>
+              <div class="pack-logo" role="img" aria-label="agence positive"></div>
               <div class="pack-title">Booster</div>
-              <div class="pack-sub">Édition 2026 · 3 cartes</div>
-              <div class="pack-badge">+</div>
+              <div class="pack-sub">3 cartes</div>
             </div>
             <div class="pack-foil"></div>
             <div class="pack-crimp pack-crimp--bottom"></div>

@@ -19,6 +19,9 @@ Ouvrir `index.html` dans un navigateur (aucune dépendance, aucun build).
 | --- | --- |
 | Contenu des cartes (titre, image, description, rareté, capacité, infos, lien) | `cards.js` |
 | Couleurs, typos, tailles, couleurs de rareté | variables `:root` en haut de `styles.css` |
+| Logo, trame, police Bohemian Soul | dossier `assets/` |
 | Durée d'appui, hauteur de la déchirure | constantes en haut de `app.js` |
 
-Sans `image`, une illustration est générée aux couleurs de la marque. Les champs marqués `TODO` sont à vérifier avec le contenu exact du site agence-positive.fr.
+Raretés : commun = corail, rare = bleu, épique = violet, légendaire = jaune/orange. Titres en Bohemian Soul, textes en Century Gothic (Didact Gothic en secours si la police n'est pas installée).
+
+Sans `image`, une illustration provisoire est générée dans la couleur de la rareté. Les champs marqués `TODO` sont à vérifier avec le contenu exact du site agence-positive.fr.

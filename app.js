@@ -51,7 +51,9 @@
     }
     const line = pts.map(([x, y]) => `${x}% ${y}%`);
     packTop.style.clipPath = `polygon(0 0, 100% 0, ${[...line].reverse().join(", ")})`;
-    packBody.style.clipPath = `polygon(${line.join(", ")}, 100% 100%, 0 100%)`;
+    // léger chevauchement pour qu'aucune couture ne soit visible avant la déchirure
+    const overlap = pts.map(([x, y]) => `${x}% ${y - 0.6}%`);
+    packBody.style.clipPath = `polygon(${overlap.join(", ")}, 100% 100%, 0 100%)`;
     tearLine.setAttribute("points", pts.map(([x, y]) => `${x},${y}`).join(" "));
   }
 
@@ -177,8 +179,8 @@
       el.innerHTML = `
         <div class="card-tilt">
           <div class="card-inner">
-            <div class="card-face card-back">
-              <div class="card-back-logo"><span class="logo-plus">+</span>positive</div>
+            <div class="card-face card-back trame">
+              <div class="card-back-logo" role="img" aria-label="agence positive"></div>
             </div>
             <div class="card-face card-front">${frontHTML(c)}</div>
           </div>
@@ -207,56 +209,44 @@
   }
 
   function frontHTML(c) {
-    const total = window.BOOSTER_CARDS.length;
-    const n = window.BOOSTER_CARDS.indexOf(c) + 1;
-    const gems = "◆".repeat(RARITY_ORDER.indexOf(c.rarity) + 1);
     const img = c.image
       ? `<img src="${esc(c.image)}" alt="${esc(c.imageAlt || c.title)}" draggable="false">`
       : placeholderArt(c);
     const facts = (c.facts || [])
       .map((f) => `<div><dt>${esc(f.label)}</dt><dd>${esc(f.value)}</dd></div>`)
       .join("");
-    const link = c.link
+    const end = c.link
       ? `<a href="${esc(c.link.url)}" target="_blank" rel="noopener">${esc(c.link.label)} →</a>`
-      : `<span class="mini-logo">+positive</span>`;
+      : `<span class="foot-logo" role="img" aria-label="agence positive"></span>`;
     return `
       <div class="front">
-        <div class="front-head">
-          <div>
-            <span class="front-type">${esc(c.type)}</span>
-            <h2 class="front-title">${esc(c.title)}</h2>
+        <div class="front-media">
+          ${img}
+          <span class="rarity-pill">${RARITY_LABEL[c.rarity] || c.rarity}</span>
+        </div>
+        <div class="front-body trame">
+          <span class="front-type">${esc(c.type)}</span>
+          <h2 class="front-title">${esc(c.title)}</h2>
+          <p class="front-desc">${esc(c.description)}</p>
+          ${facts ? `<dl class="front-facts">${facts}</dl>` : ""}
+          <div class="front-foot">
+            <span class="front-energy"><small>Énergie positive</small>${c.energy ?? ""}</span>
+            ${end}
           </div>
-          <div class="front-energy" title="Énergie positive"><small>PE</small>${c.energy ?? ""}<span class="logo-plus">+</span></div>
         </div>
-        <div class="front-img">${img}</div>
-        <div class="front-band">
-          <span>N° ${String(n).padStart(3, "0")}/${String(total).padStart(3, "0")}</span>
-          <span class="rarity-pill"><span class="gems">${gems}</span>${RARITY_LABEL[c.rarity] || c.rarity}</span>
-        </div>
-        <p class="front-desc">${esc(c.description)}</p>
-        ${c.ability ? `<div class="front-ability"><strong>${esc(c.ability.name)}</strong>${esc(c.ability.text)}</div>` : ""}
-        <dl class="front-facts">${facts}</dl>
-        <div class="front-foot"><span class="mini-logo">+positive</span>${c.link ? link : "<span>Édition 2026</span>"}</div>
       </div>`;
   }
 
-  // illustration générée aux couleurs de la marque quand aucune image n'est fournie
+  // illustration provisoire quand aucune image n'est fournie
   function placeholderArt(c) {
-    const p = brand("--brand-primary");
-    const s = brand("--brand-secondary");
-    const t = brand("--brand-tertiary");
-    const d = brand("--brand-dark");
-    const initials = c.title.replace(/[^A-Za-zÀ-ÿ ]/g, "").split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
-    const gid = `g-${c.id}`;
+    const color = brand(`--r-${c.rarity}`) || brand("--coral");
+    const ink = brand("--ink");
+    const initials = c.title.replace(/[^A-Za-zÀ-ÿ ]/g, "").split(" ").map((w) => w[0]).join("").slice(0, 2);
     return `
       <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(c.imageAlt || c.title)}">
-        <defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="${p}"/><stop offset="1" stop-color="${s}"/></linearGradient></defs>
-        <rect width="160" height="100" fill="url(#${gid})"/>
-        <circle cx="132" cy="18" r="34" fill="${t}" opacity=".55"/>
-        <circle cx="22" cy="92" r="28" fill="${d}" opacity=".18"/>
-        <text x="80" y="66" text-anchor="middle" font-family="Syne, sans-serif" font-weight="800" font-size="46" fill="${d}">${esc(initials)}</text>
-        <text x="138" y="88" text-anchor="middle" font-family="Syne, sans-serif" font-weight="800" font-size="22" fill="#fff">+</text>
+        <rect width="160" height="100" fill="${ink}"/>
+        <circle cx="80" cy="50" r="38" fill="${color}" opacity=".9"/>
+        <text x="80" y="64" text-anchor="middle" font-family="Bohemian Soul, Georgia, serif" font-size="40" fill="#fff">${esc(initials)}</text>
       </svg>`;
   }
 
@@ -333,7 +323,7 @@
     const level = RARITY_ORDER.indexOf(data.rarity);
     if (level < 1) return;
     const colorVar = { rare: "--r-rare", epique: "--r-epique", legendaire: "--r-legendaire" }[data.rarity];
-    const colors = [brand(colorVar), brand("--brand-primary"), brand("--brand-secondary"), "#ffffff"];
+    const colors = [brand(colorVar), brand("--coral"), "#ffffff"];
     setTimeout(() => {
       if (level >= 3) flashScreen(0.7);
       if (level >= 2 && navigator.vibrate) navigator.vibrate(level >= 3 ? [40, 30, 80] : 40);
@@ -348,9 +338,8 @@
     for (let i = 0; i < count; i++) {
       const p = document.createElement("div");
       const color = colors[i % colors.length];
-      const isPlus = i % 4 === 0;
-      p.className = "particle" + (isPlus ? " is-plus" : "");
-      if (isPlus) { p.textContent = "+"; p.style.color = color; } else p.style.background = color;
+      p.className = "particle";
+      p.style.background = color;
       p.style.left = `${cx}px`;
       p.style.top = `${cy}px`;
       fx.appendChild(p);

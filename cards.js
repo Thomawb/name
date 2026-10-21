@@ -2,7 +2,7 @@
  * Contenu des cartes du booster.
  * ---------------------------------------------------------------
  * Pour modifier une carte, il suffit d'éditer ce fichier.
- *  - rarity : "commun" | "rare" | "epique" | "legendaire"
+ *  - rarity : "commun" (corail) | "rare" (bleu) | "epique" (violet) | "legendaire" (jaune/orange)
  *  - image  : URL ou chemin (ex: "assets/celine.jpg"). Laisser vide
  *             pour afficher une illustration générée aux couleurs de l'agence.
  *  - Les champs marqués  TODO  sont à vérifier / compléter avec le
@@ -19,10 +19,6 @@ window.BOOSTER_CARDS = [
     energy: 100,
     description:
       "Agence de communication responsable pour les entreprises, collectivités et associations du Val de Saône, de la Dombes et du Beaujolais.",
-    ability: {
-      name: "Communiquons mieux",
-      text: "Stratégie, identité, print et digital, avec un impact environnemental et sociétal limité.",
-    },
     facts: [
       { label: "Basée à", value: "Savigneux" },
       { label: "Site web", value: "0,16 g de CO₂ par vue" },
@@ -39,14 +35,6 @@ window.BOOSTER_CARDS = [
     energy: 150,
     description:
       "Fondatrice de l'agence Positive. Elle transforme les idées en marques qui ont du sens.", // TODO : bio exacte
-    ability: {
-      name: "Vision créative",
-      text: "Une fois par partie, révèle l'identité cachée d'une marque et la rend inoubliable.",
-    },
-    facts: [
-      { label: "Rôle", value: "Fondatrice & directrice" }, // TODO
-      { label: "Super-pouvoir", value: "Voir le potentiel partout" },
-    ],
     link: null,
   },
   {
@@ -59,10 +47,6 @@ window.BOOSTER_CARDS = [
     energy: 80,
     description:
       "Évolution de l'identité visuelle de l'Association pour le Développement de la Recherche en Soins en Psychiatrie.",
-    ability: {
-      name: "Nouvelle identité",
-      text: "Donne à la recherche en soins psychiatriques une image claire, moderne et rassembleuse.",
-    },
     facts: [
       { label: "Client", value: "ADRpsy (association, créée fin 2022)" },
       { label: "Mission", value: "Évolution d'identité visuelle" },
